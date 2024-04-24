@@ -4,22 +4,29 @@ import { Dashboard } from '@/pages/dashboard';
 import { SignInPage } from '@/pages/auth/signin';
 import { RegisterPage } from '@/pages/auth/register';
 import ChatPage from '@/pages/converseChat';
-const LandingPage = lazy(() => import('@/pages/landing-page'))
-const DashboardLayout = lazy(() => import('@/components/layout/dashboard-layout'));
+const LandingPage = lazy(() => import('@/pages/landing-page'));
+const DashboardLayout = lazy(
+  () => import('@/components/layout/dashboard-layout')
+);
 
 const useAuth = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  let isLoggedIn = false;
+
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    isLoggedIn = true;
+  }
 
   return isLoggedIn;
 };
 
-const PrivateRoute = ({ element, path }: { element: JSX.Element; path: string }) => {
+const PrivateRoute = ({
+  element,
+  path
+}: {
+  element: JSX.Element;
+  path: string;
+}) => {
   const isAuthenticated = useAuth();
   const location = useLocation();
 
@@ -45,7 +52,7 @@ export default function AppRouter() {
         {
           element: <LandingPage />,
           index: true
-        },
+        }
       ]
     }
   ];
@@ -65,12 +72,12 @@ export default function AppRouter() {
       index: true
     },
     {
-      path:'/chat',
-      element:<PrivateRoute path="/chat" element={<ChatPage />} />
+      path: '/chat',
+      element: <PrivateRoute path="/chat" element={<ChatPage />} />
     },
     {
-      path:'/landing',
-      element:<LandingPage/>
+      path: '/landing',
+      element: <LandingPage />
     },
     {
       path: '*',

@@ -16,56 +16,49 @@ import '../user-auth.css';
 import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
+ 
 const formSchema = z.object({
   username: z.string().min(5, 'Username must be at least 5 characters long'),
   password: z.string().min(8, 'Password must be at least 8 characters long')
 });
-
+ 
 type UserFormValue = z.infer<typeof formSchema>;
-
+ 
 export default function UserAuthForm() {
-
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const defaultValues = {
-    username: '',
-    password: ''
-  };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues
+    defaultValues: {
+      username: '',
+      password: ''
+    }
   });
-
+ 
   const { register, handleSubmit, formState: { errors } } = form;
-
+ 
   const onSubmit = async (data: UserFormValue) => {
-    setLoading(true); 
     try {
-      const response = await axios.post('/register', data); // Send POST request using Axios
-    
-      if (response.status === 201) {
-        console.log('User created successfully:', response.data.msg);
-        router.push('/login'); // Redirect to login page after successful registration
+      const response = await axios.post('http://127.0.0.1:5000/login', data);
+      if (response.status === 200) {
+        const responseData = response.data;
+        // const username = responseData.username;
+        // console.log('Logged in as:', username);
+        console.log("RESPONSE: ", responseData.access_token)
+        localStorage.setItem("authToken", responseData.access_token)
+        router.push('/dashboard');
       } else {
-        console.error('Registration error:', response.data.msg);
+        console.error('Login error:', response.data.msg);
       }
     } catch (error) {
-      console.error('Error during registration:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error during login:', error);
     }
   };
-
-  
+ 
   return (
-    <div style={{zIndex:1}}>
+    <div style={{ zIndex: 1 }}>
       <Form {...form}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full space-y-2"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-2">
           <FormField
             control={form.control}
             name="username"
@@ -74,7 +67,7 @@ export default function UserAuthForm() {
                 <Input
                   type="text"
                   placeholder="Username"
-                  disabled={loading}
+                  disabled={false}
                   {...field}
                   {...register('username')}
                   className="white-border bg-neutral-600"
@@ -90,12 +83,12 @@ export default function UserAuthForm() {
             render={({ field }) => (
               <FormItem className="relative">
                 <Input
-                  type={showPassword ? 'text' : 'password'} 
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
-                  disabled={loading}
+                  disabled={false}
                   {...field}
                   {...register('password')}
-                  className="white-border bg-neutral-600" 
+                  className="white-border bg-neutral-600"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center justify-center pb-2 pr-3">
                   {showPassword ? (
@@ -115,18 +108,18 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
-          <Button disabled={loading} className=" w-half p-2 mt-4" type="submit" style={{zIndex:100}}>
-            {loading ? 'Creating...' : 'Create'}
-          </Button>         
+          <Button className="w-half p-2 mt-4" type="submit">
+            Login
+          </Button>
         </form>
       </Form>
       <div className="relative p-2">
         <div className="relative flex justify-center text-xs">
-          <span className=" px-2 p-1 text-muted-foreground">
-            Already have an account?
+          <span className="px-2 p-1 text-muted-foreground">
+            Don't have an account?
           </span>
-          <Link to={'/login'} className='group relative p-1'>
-            <span style={{ textTransform: 'uppercase' }}>L</span>ogin Now
+          <Link to={'/register'} className='group relative p-1'>
+            <span style={{ textTransform: 'uppercase' }}>R</span>egister Now
             <span className='absolute bottom-0 left-0 h-[2px] w-full scale-x-0 transform bg-white transition-transform duration-500 group-hover:scale-x-100'></span>
           </Link>
         </div>

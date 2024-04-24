@@ -118,3 +118,4 @@ urllib3==2.2.1
 watchdog==4.0.0
 wcwidth==0.2.13
 yarl==1.9.4
+Flask-Cors==4.0.0
