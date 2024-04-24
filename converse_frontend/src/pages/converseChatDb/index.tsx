@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import axios from 'axios';
  
-const ChatPage: React.FC = () => {
+const ChatDBPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const { mutate, isLoading } = useMutation(
-    (inputMessage: string) => axios.post("http://127.0.0.1:5000/chat_with_ai", { message: inputMessage }),
+    (inputMessage: string) => axios.post("http://127.0.0.1:5000/chat_with_db", { input_message: inputMessage }, {headers: {
+        'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+    }}),
     {
       onSuccess: (response: any) => {
-        const aiReply = response.data;
+        const aiReply = response.data.ai_response;
         setMessages([...messages, { role: "user", content: inputMessage }]);
         setMessages([...messages, { role: "ai", content: aiReply }]);
         setInputMessage("");
@@ -86,4 +88,4 @@ const ChatPage: React.FC = () => {
   );
 };
  
-export default ChatPage;
+export default ChatDBPage;

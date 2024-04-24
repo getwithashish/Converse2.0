@@ -135,11 +135,11 @@ export const Dashboard = () => {
                 <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-950 dark:border-gray-700  transition duration-300 ease-in-out hover:scale-105">
                   <img className="rounded-t-lg " src="../../../public/Converse 3.png" alt="" />
                   <div className="p-5">
-                    <a href="#">
+                  <Link to={'/chat_with_db'}>
                       <h5 className="mb-2 text-lg md:text-xl lg:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        <AnimatedGradientTextThree>CONVERSE - DataB</AnimatedGradientTextThree>
+                        <AnimatedGradientTextTwo>CONVERSE - DataB</AnimatedGradientTextTwo>
                       </h5>
-                    </a>
+                    </Link>
                     <p className="mb-3 text-sm md:text-base lg:text-sm font-normal text-gray-700 dark:text-white"> Throw everything that you got at me!</p>
                   </div>
                 </div>

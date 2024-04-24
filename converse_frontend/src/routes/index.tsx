@@ -4,6 +4,7 @@ import { Dashboard } from '@/pages/dashboard';
 import { SignInPage } from '@/pages/auth/signin';
 import { RegisterPage } from '@/pages/auth/register';
 import ChatPage from '@/pages/converseChat';
+import ChatDBPage from '@/pages/converseChatDb';
 const LandingPage = lazy(() => import('@/pages/landing-page'));
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
@@ -74,6 +75,10 @@ export default function AppRouter() {
     {
       path: '/chat',
       element: <PrivateRoute path="/chat" element={<ChatPage />} />
+    },
+    {
+      path: '/chat_with_db',
+      element: <PrivateRoute path="/chat_with_db" element={<ChatDBPage />}/>
     },
     {
       path: '/landing',
