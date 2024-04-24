@@ -6,5 +6,4 @@ from services.database_sql_talk_gemini import generate_gemini_response
 
 @jwt_required()
 def chatWithDoc():
-    response = generate_gemini_response("How many car models are there?")
-    return jsonify({"ai_response": response}), 200
+    return jsonify({"ai_response": "Not Implemented Yet"}), 200
