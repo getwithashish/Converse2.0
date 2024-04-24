@@ -3,5 +3,5 @@ from flask_jwt_extended import jwt_required
 
 
 @jwt_required()
-def chatWithDb():
-    return jsonify({"msg": "Hello, This is Cool"}), 200
+def chatWithAi():
+    return jsonify({"ai_response": "Not Implemented Yet"}), 200
