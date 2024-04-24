@@ -1,35 +1,58 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import axios from 'axios';
-import { Button } from '@/components/ui/button';
 import { gsap } from 'gsap';
+import { Button } from '@/components/ui/button';
 
-const ChatPage: React.FC = () => {
+const ChatDocPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     []
   );
   const [inputMessage, setInputMessage] = useState('');
-  const { mutate, isLoading } = useMutation(
-    (inputMessage: string) =>
-      axios.post('/chat_with_ai', { message: inputMessage }),
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
+
+  const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
+    (message: string | File) => {
+      if (typeof message === 'string') {
+        return axios.post('/chat_with_ai', { inputMessage: message });
+      } else {
+        const formData = new FormData();
+        formData.append('document', message);
+        return axios.post('/chat_with_doc', formData);
+      }
+    },
     {
       onSuccess: (response: any) => {
-        const aiReply = response.data.ai_response;
-        setMessages((prevMessages) => [
+        const reply = response.data.ai_response;
+        setMessages(prevMessages => [
           ...prevMessages,
           { role: 'user', content: inputMessage },
-          { role: 'ai', content: aiReply }
+          { role: 'ai', content: reply }
         ]);
         setInputMessage('');
+        setUploadSuccess(true);
       },
       onError: (error: any) => {
         console.error('Error sending message:', error);
+        setUploadSuccess(false);
       }
     }
   );
 
   const handleSendMessage = () => {
-    mutate(inputMessage);
+    if (selectedFile) {
+      sendMessage(selectedFile);
+    } else {
+      sendMessage(inputMessage);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+      setUploadSuccess(null);
+    }
   };
 
   const textRef = useRef(null);
@@ -55,7 +78,21 @@ const ChatPage: React.FC = () => {
         <div className="p-4 text-lg" ref={textRef}>
           Converse
         </div>
-        <div className="absolute bottom-0 items-center justify-center p-4">
+        <div className="p-2 flex flex-col items-center justify-center">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="mb-2 rounded-lg w-auto bg-gray-400 p-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+          {uploadSuccess === true && (
+            <p className="text-green-500">File uploaded successfully!</p>
+          )}
+          {uploadSuccess === false && (
+            <p className="text-red-500">Failed to upload file!</p>
+          )}
+          <Button className="text-xs">Upload File</Button>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 p-4">
           <Button className="text-xs">Logout</Button>
         </div>
       </div>
@@ -65,7 +102,7 @@ const ChatPage: React.FC = () => {
             className="text-md text-left font-semibold tracking-tight md:text-lg lg:text-xl"
             ref={secRef}
           >
-            Chat with Converse
+            Chat with Converse-Docs
           </div>
           <div className="chat-messages flex-grow">
             {messages.map((message, index) => (
@@ -82,7 +119,7 @@ const ChatPage: React.FC = () => {
                 {message.content}
               </div>
             ))}
-            {isLoading && (
+            {isSendingMessage && (
               <div className="flex items-center justify-center">
                 <svg
                   aria-hidden="true"
@@ -104,34 +141,34 @@ const ChatPage: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center p-16">
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Type your message..."
-            className=" flex-grow rounded-md bg-gray-600 px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="ml-4 h-6 w-6 cursor-pointer text-gray-500"
-            onClick={!isLoading ? handleSendMessage : undefined}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+          <div className="flex items-center justify-between p-5">
+            <input
+              type="text"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-grow rounded-md bg-gray-600 px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
-          </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className={`ml-4 h-6 w-6 cursor-pointer text-gray-500 ${isSendingMessage ? 'opacity-50 pointer-events-none' : ''}`}
+              onClick={handleSendMessage}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default ChatPage;
+export default ChatDocPage;
