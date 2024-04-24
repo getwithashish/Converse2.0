@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes, useLocation } from 'react-router-dom';
 import { Dashboard } from '@/pages/dashboard';
 import { SignInPage } from '@/pages/auth/signin';
@@ -59,12 +59,12 @@ export default function AppRouter() {
 
   const publicRoutes = [
     {
-      path: 'signin',
-      element: <SignInPage />
+      path: '/landing',
+      element: <LandingPage />
     },
     {
-      path: '/dashboard',
-      element: <PrivateRoute path="/dashboard" element={<Dashboard />} />
+      path: 'signin',
+      element: <SignInPage />
     },
     {
       path: '/register',
@@ -72,12 +72,13 @@ export default function AppRouter() {
       index: true
     },
     {
-      path: '/chat',
-      element: <ChatPage />
+      path: '/dashboard',
+      element: <PrivateRoute path="/dashboard" element={<Dashboard />} />
     },
+    
     {
-      path: '/landing',
-      element: <LandingPage />
+      path: '/chat',
+      element: <PrivateRoute path="/chat" element={<ChatPage />} />
     },
     {
       path: '*',
@@ -85,11 +86,11 @@ export default function AppRouter() {
     },
     {
       path:'/chat_with_doc',
-      element:<ChatDocPage/>
+      element: <PrivateRoute path="/chat_with_doc" element={<ChatDocPage/>} />
     },
     {
       path: '/chat_with_db',
-      element: <ChatDBPage />
+      element: <PrivateRoute path="/chat_with_doc" element={<ChatDBPage />} />
     }
 
   ];
