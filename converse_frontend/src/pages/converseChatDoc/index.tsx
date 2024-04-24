@@ -5,9 +5,7 @@ import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
 
 const ChatDocPage: React.FC = () => {
-  const [messages, setMessages] = useState<{ role: string; content: string }[]>(
-    []
-  );
+  const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
@@ -15,11 +13,19 @@ const ChatDocPage: React.FC = () => {
   const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
     (message: string | File) => {
       if (typeof message === 'string') {
-        return axios.post('/chat_with_ai', { inputMessage: message });
+        return axios.post('http://127.0.0.1:5000/chat_with_ai', { inputMessage: message }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
+        });
       } else {
         const formData = new FormData();
         formData.append('document', message);
-        return axios.post('/chat_with_doc', formData);
+        return axios.post('http://127.0.0.1:5000/chat_with_doc', formData, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
+        });
       }
     },
     {

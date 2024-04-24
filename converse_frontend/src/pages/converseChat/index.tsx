@@ -11,7 +11,7 @@ const ChatPage: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
-      axios.post('/chat_with_ai', { message: inputMessage }),
+      axios.post('http://127.0.0.1:5000/chat_with_ai', { message: inputMessage }),
     {
       onSuccess: (response: any) => {
         const aiReply = response.data.ai_response;
