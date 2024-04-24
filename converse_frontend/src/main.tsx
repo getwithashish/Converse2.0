@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import App from './App.tsx';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import './index.css';
 

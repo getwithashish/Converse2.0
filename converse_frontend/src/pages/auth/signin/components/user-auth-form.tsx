@@ -16,14 +16,14 @@ import '../user-auth.css';
 import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 import { Link } from 'react-router-dom'; 
 import axios from 'axios';
-
+ 
 const formSchema = z.object({
   username: z.string().min(5, 'Username must be at least 5 characters long'),
   password: z.string().min(8, 'Password must be at least 8 characters long')
 });
-
+ 
 type UserFormValue = z.infer<typeof formSchema>;
-
+ 
 export default function UserAuthForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -34,16 +34,18 @@ export default function UserAuthForm() {
       password: ''
     }
   });
-
+ 
   const { register, handleSubmit, formState: { errors } } = form;
-
+ 
   const onSubmit = async (data: UserFormValue) => {
     try {
-      const response = await axios.post('/login', data);
+      const response = await axios.post('http://127.0.0.1:5000/login', data);
       if (response.status === 200) {
         const responseData = response.data;
-        const username = responseData.username;
-        console.log('Logged in as:', username);
+        // const username = responseData.username;
+        // console.log('Logged in as:', username);
+        console.log("RESPONSE: ", responseData.access_token)
+        localStorage.setItem("authToken", responseData.access_token)
         router.push('/dashboard');
       } else {
         console.error('Login error:', response.data.msg);
@@ -52,7 +54,7 @@ export default function UserAuthForm() {
       console.error('Error during login:', error);
     }
   };
-
+ 
   return (
     <div style={{ zIndex: 1 }}>
       <Form {...form}>
@@ -83,7 +85,7 @@ export default function UserAuthForm() {
                 <Input
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Password"
-                  disabled={false} 
+                  disabled={false}
                   {...field}
                   {...register('password')}
                   className="white-border bg-neutral-600"

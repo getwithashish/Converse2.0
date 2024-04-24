@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import axios from 'axios';
-import { gsap } from 'gsap';
-import { Button } from '@/components/ui/button';
-
+ 
 const ChatDBPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const { mutate, isLoading } = useMutation(
-    (inputMessage: string) => axios.post("/chat_with_db", { message: inputMessage }),
+    (inputMessage: string) => axios.post("http://127.0.0.1:5000/chat_with_db", { input_message: inputMessage }, {headers: {
+        'Authorization': `Bearer ${localStorage.getItem("authToken")}`
+    }}),
     {
       onSuccess: (response: any) => {
-        const aiReply = response.data;
+        const aiReply = response.data.ai_response;
         setMessages([...messages, { role: "user", content: inputMessage }]);
         setMessages([...messages, { role: "ai", content: aiReply }]);
         setInputMessage("");
@@ -21,14 +21,11 @@ const ChatDBPage: React.FC = () => {
       },
     }
   );
-
+ 
   const handleSendMessage = () => {
     mutate(inputMessage);
   };
-
-
-  
-
+ 
   return (
     <div className="flex h-screen">
       <div className="flex flex-col flex-grow overflow-hidden p-5">
@@ -80,7 +77,7 @@ const ChatDBPage: React.FC = () => {
           />
           <button
             onClick={handleSendMessage}
-            disabled={isLoading} 
+            disabled={isLoading}
             className="bg-blue-500 text-white py-2 px-4 rounded-md focus:outline-none hover:bg-blue-600 ml-4"
           >
             {isLoading ? "Sending..." : "Send"}
@@ -90,5 +87,5 @@ const ChatDBPage: React.FC = () => {
     </div>
   );
 };
-
+ 
 export default ChatDBPage;
