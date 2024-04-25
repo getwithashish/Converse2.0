@@ -120,7 +120,7 @@
 </documentation>
 <documentation>
     <metadata>
-        <h1>Document Chatbot</h1>
+        <h1>Database Chatbot</h1>
     </metadata>
     <content>
         <section>
