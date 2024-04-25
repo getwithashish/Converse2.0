@@ -118,5 +118,50 @@
         </section>
     </content>
 </documentation>
+<documentation>
+    <metadata>
+        <h1>Document Chatbot</h1>
+    </metadata>
+    <content>
+        <section>
+            <h2>Introduction</h2>
+            <p>This application provides a chatbot interface for interacting with Database</p>
+        </section>
+        <section>
+            <h2>Functionality</h2>
+            <p>The application offers the following functionality:</p>
+            <ul>
+                <li>Ask questions: Users can ask questions related to the content of the Database.</li>
+                <li>Get answers: The chatbot provides answers to user questions based on the content of the Database.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Dependencies</h2>
+            <p>The application relies on the following dependencies:</p>
+            <ul>
+                <li>psycopg2: psycopg2 is a PostgreSQL adapter for Python, providing efficient and easy-to-use access to PostgreSQL databases from Python programs.</li>
+                <li>Google Generative AI (GenAI): A service provided by Google for generating AI-based responses.</li>
+                <li>pyOpenSSL: pyOpenSSL is a Python interface to the OpenSSL library, enabling developers to incorporate SSL/TLS functionality into their Python applications.</li>
+                <li>SQLAlchemy: SQLAlchemy is a Python SQL toolkit and Object-Relational Mapping (ORM) library that provides a comprehensive set of tools for working with databases in Python.</li>
+                <li>SQLAlchemy:  Flask-SQLAlchemy is an extension for Flask that simplifies the integration of SQLAlchemy with Flask applications, making it easier to work with databases in Flask-based projects.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Implementation Details</h2>
+            <p>The application is implemented using Python and ReactJS for the user interface. It leverages Google Generative AI (Gemini) for generating responses to user questions. PDF processing is handled using PyPDF2, and natural language processing tasks are performed using LangChain.</p>
+        </section>
+        <section>
+            <h2>Future Improvements</h2>
+            <p>Potential areas for improvement include:</p>
+            <ul>
+                <li>Enhancing the chatbot's response accuracy and understanding of user queries.</li>
+                <li>Improving the efficiency of PDF processing and text extraction.</li>
+                <li>Adding support for more advanced natural language processing tasks.</li>
+                <li>Enhancing the user interface for better usability and user experience.</li>
+                <li>Optimizing performance and scalability for handling large PDF files and concurrent users.</li>
+            </ul>
+        </section>
+    </content>
+</documentation>
 
 
