@@ -11,7 +11,15 @@ const ChatPage: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
-      axios.post('http://127.0.0.1:5000/chat_with_ai', { message: inputMessage }),
+      axios.post(
+        'http://127.0.0.1:5000/chat_with_ai',
+        { input_message: inputMessage },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          }
+        }
+      ),
     {
       onSuccess: (response: any) => {
         const aiReply = response.data.ai_response;
@@ -73,7 +81,7 @@ const ChatPage: React.FC = () => {
                 key={index}
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
-                    ? 'text-black'
+                    ? 'text-white'
                     : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white'
                 }`}
               >
@@ -133,5 +141,5 @@ const ChatPage: React.FC = () => {
     </div>
   );
 };
- 
+
 export default ChatPage;

@@ -82,7 +82,7 @@ const ChatDBPage: React.FC = () => {
                 key={index}
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
-                    ? 'text-black'
+                    ? 'text-white'
                     : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white'
                 }`}
               >

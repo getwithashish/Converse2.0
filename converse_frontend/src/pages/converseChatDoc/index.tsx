@@ -13,7 +13,7 @@ const ChatDocPage: React.FC = () => {
   const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
     (message: string | File) => {
       if (typeof message === 'string') {
-        return axios.post('http://127.0.0.1:5000/chat_with_ai', { inputMessage: message }, {
+        return axios.post('http://127.0.0.1:5000/chat_with_ai', { input_message: message }, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }
@@ -116,7 +116,7 @@ const ChatDocPage: React.FC = () => {
                 key={index}
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
-                    ? 'text-black'
+                    ? 'text-white'
                     : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white'
                 }`}
               >
