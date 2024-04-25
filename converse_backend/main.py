@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 from controllers.chat_with_ai import chatWithAi
 from controllers.chat_with_db import chatWithDb
-from controllers.chat_with_doc import chatWithDoc
+from controllers.chat_with_doc import chatWithDoc, uploadDoc
 from models.models import db
 from controllers.register import register
 from controllers.login import login
@@ -30,6 +30,8 @@ app.route('/login', methods=['POST'])(login)
 app.route('/chat_with_db', methods=['POST'])(chatWithDb)
 app.route('/chat_with_doc', methods=['POST'])(chatWithDoc)
 app.route('/chat_with_ai', methods=['POST'])(chatWithAi)
+app.route('/upload_doc', methods=['POST'])(uploadDoc)
+
 
 
 if __name__ == "__main__":
