@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = "this_is_my_secret_key"
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql://postgres:password@localhost:5432/postgres"
+    "postgresql://postgres:password@postgresql-db-service:5432/postgres"
 )
 app.config["JWT_SECRET_KEY"] = "this_is_my_secret_jwt_secret_key"
 

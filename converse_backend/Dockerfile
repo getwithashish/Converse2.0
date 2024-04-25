@@ -10,6 +10,7 @@ RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificat
 RUN apk update && \
     apk add --no-cache \
         python3-dev \
+        libpq-dev \
         mariadb-dev \
         build-base \
         pkgconf
