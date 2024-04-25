@@ -13,7 +13,7 @@ const ChatPage: React.FC = () => {
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
       axios.post(
-        'http://127.0.0.1:5000/chat_with_ai',
+        'http://20.44.62.11:8000/chat_with_ai',
         { input_message: inputMessage },
         {
           headers: {

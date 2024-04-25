@@ -14,7 +14,7 @@ const ChatDocPage: React.FC = () => {
   const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
     (message: string) => {
       return axios.post(
-        'http://127.0.0.1:5000/chat_with_doc',
+        'http://20.44.62.11:8000/chat_with_doc',
         { input_message: message },
         {
           headers: {
@@ -62,7 +62,7 @@ const ChatDocPage: React.FC = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
       try {
-        await axios.post('http://127.0.0.1:5000/upload_doc', formData, {
+        await axios.post('http://20.44.62.11:8000/upload_doc', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${localStorage.getItem('authToken')}`,
@@ -125,7 +125,7 @@ const ChatDocPage: React.FC = () => {
           <div className="text-md text-left font-semibold tracking-tight md:text-lg lg:text-xl" ref={secRef}>
             Chat with Converse-Docs
           </div>
-          <div className="chat-messages flex-grow overflow-y-auto">
+          <div className="chat-messages flex-grow">
             {messages.map((message, index) => (
               <div
                 key={index}

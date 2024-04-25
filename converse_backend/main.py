@@ -11,28 +11,29 @@ from controllers.login import login
 
 
 app = Flask(__name__)
-app.secret_key = 'this_is_my_secret_key'
+app.secret_key = "this_is_my_secret_key"
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:password@localhost:5432/postgres"
-app.config['JWT_SECRET_KEY'] = 'this_is_my_secret_jwt_secret_key'
+app.config["SQLALCHEMY_DATABASE_URI"] = (
+    "postgresql://postgres:password@localhost:5432/postgres"
+)
+app.config["JWT_SECRET_KEY"] = "this_is_my_secret_jwt_secret_key"
 
 db.init_app(app)
 jwt = JWTManager(app)
 
-CORS(app, origins=["http://localhost:5173"])
+CORS(app, origins=["http://localhost:5173", "http://20.44.62.11:5173"])
 
 with app.app_context():
     db.create_all()
 
 
-app.route('/register', methods=['POST'])(register)
-app.route('/login', methods=['POST'])(login)
-app.route('/chat_with_db', methods=['POST'])(chatWithDb)
-app.route('/chat_with_doc', methods=['POST'])(chatWithDoc)
-app.route('/chat_with_ai', methods=['POST'])(chatWithAi)
-app.route('/upload_doc', methods=['POST'])(uploadDoc)
-
+app.route("/register", methods=["POST"])(register)
+app.route("/login", methods=["POST"])(login)
+app.route("/chat_with_db", methods=["POST"])(chatWithDb)
+app.route("/chat_with_doc", methods=["POST"])(chatWithDoc)
+app.route("/chat_with_ai", methods=["POST"])(chatWithAi)
+app.route("/upload_doc", methods=["POST"])(uploadDoc)
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=8000)

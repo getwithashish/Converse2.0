@@ -39,7 +39,7 @@ export default function UserAuthForm() {
  
   const onSubmit = async (data: UserFormValue) => {
     try {
-      const response = await axios.post('http://127.0.0.1:5000/login', data);
+      const response = await axios.post('http://20.44.62.11:8000/login', data);
       if (response.status === 200) {
         const responseData = response.data;
         console.log("RESPONSE: ", responseData.access_token)
