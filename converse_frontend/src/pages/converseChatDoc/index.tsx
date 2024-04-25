@@ -50,6 +50,13 @@ const ChatDocPage: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   const handleFileUpload = async () => {
     if (selectedFile) {
       const formData = new FormData();
@@ -161,6 +168,7 @@ const ChatDocPage: React.FC = () => {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Type your message..."
+              onKeyDown={handleKeyDown}
               className="flex-grow rounded-md bg-gray-600 px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
             <svg

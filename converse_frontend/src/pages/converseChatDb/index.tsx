@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { gsap } from 'gsap';
-import { Button } from '@/components/ui/button';
 import { LogoutButton } from '@/components/logout';
 
 const ChatDBPage: React.FC = () => {
@@ -58,6 +57,14 @@ const ChatDBPage: React.FC = () => {
       gsap.to(secRef.current, { x: 0, opacity: 1, duration: 2 });
     }
   }, []);
+
+  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
   return (
     <div className="flex h-screen">
@@ -118,6 +125,7 @@ const ChatDBPage: React.FC = () => {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               placeholder="Type your message..."
+              onKeyDown={handleKeyDown}
               className="flex-grow rounded-md bg-gray-600 px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
             <svg

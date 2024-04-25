@@ -73,15 +73,15 @@ export default function AppRouter() {
     },
     {
       path: '/dashboard',
-      element: <PrivateRoute path="/dashboard" element={<Dashboard />} />,
-      // element: <Dashboard/>
+      // element: <PrivateRoute path="/dashboard" element={<Dashboard />} />,
+      element: <Dashboard/>
 
     },
     
     {
       path: '/chat',
-      element: <PrivateRoute path="/chat" element={<ChatPage />} />,
-      // element: <ChatPage/>
+      // element: <PrivateRoute path="/chat" element={<ChatPage />} />,
+      element: <ChatPage/>
     },
     {
       path: '*',
@@ -89,13 +89,13 @@ export default function AppRouter() {
     },
     {
       path:'/chat_with_doc',
-      element: <PrivateRoute path="/chat_with_doc" element={<ChatDocPage/>} />
-      // element: <ChatDocPage/>
+      // element: <PrivateRoute path="/chat_with_doc" element={<ChatDocPage/>} />
+      element: <ChatDocPage/>
     },
     {
       path: '/chat_with_db',
-      element: <PrivateRoute path="/chat_with_doc" element={<ChatDBPage />} />
-      // element: <ChatDBPage/>
+      // element: <PrivateRoute path="/chat_with_doc" element={<ChatDBPage />} />
+      element: <ChatDBPage/>
     }
 
   ];
