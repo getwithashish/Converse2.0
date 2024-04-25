@@ -83,7 +83,7 @@ const ChatPage: React.FC = () => {
             <UserName/>
           </div>
           
-          <div className="chat-messages flex-grow">
+          <div className="chat-messages flex-grow overflow-y-auto">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -121,7 +121,7 @@ const ChatPage: React.FC = () => {
             )}
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center p-16">
+        <div className=" flex items-center justify-center p-5">
         <input
             type="text"
             value={inputMessage}

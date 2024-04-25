@@ -82,7 +82,7 @@ const ChatDBPage: React.FC = () => {
           >
             Chat with ConverseDB
           </div>
-          <div className="chat-messages flex-grow">
+          <div className="chat-messages flex-grow overflow-y-auto">
             {messages.map((message, index) => (
               <div
                 key={index}

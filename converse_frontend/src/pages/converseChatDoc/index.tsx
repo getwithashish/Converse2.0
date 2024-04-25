@@ -125,7 +125,7 @@ const ChatDocPage: React.FC = () => {
           <div className="text-md text-left font-semibold tracking-tight md:text-lg lg:text-xl" ref={secRef}>
             Chat with Converse-Docs
           </div>
-          <div className="chat-messages flex-grow">
+          <div className="chat-messages flex-grow overflow-y-auto">
             {messages.map((message, index) => (
               <div
                 key={index}
