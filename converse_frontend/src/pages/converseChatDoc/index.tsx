@@ -15,7 +15,7 @@ const ChatDocPage: React.FC = () => {
     (message: string) => {
       return axios.post(
         'http://127.0.0.1:5000/chat_with_doc',
-        { message },
+        { input_message: message },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`,
@@ -53,7 +53,7 @@ const ChatDocPage: React.FC = () => {
   const handleFileUpload = async () => {
     if (selectedFile) {
       const formData = new FormData();
-      formData.append('document', selectedFile);
+      formData.append('file', selectedFile);
       try {
         await axios.post('http://127.0.0.1:5000/upload_doc', formData, {
           headers: {
