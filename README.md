@@ -148,17 +148,17 @@
         </section>
         <section>
             <h2>Implementation Details</h2>
-            <p>The application is implemented using Python and ReactJS for the user interface. It leverages Google Generative AI (Gemini) for generating responses to user questions. PDF processing is handled using PyPDF2, and natural language processing tasks are performed using LangChain.</p>
+            <p>The application is implemented using Python and ReactJS for the user interface. It leverages Google Generative AI (Gemini) for generating responses to user questions. Database processing is handled using psycopg2, and natural language processing tasks are performed using LangChain.</p>
         </section>
         <section>
             <h2>Future Improvements</h2>
             <p>Potential areas for improvement include:</p>
             <ul>
                 <li>Enhancing the chatbot's response accuracy and understanding of user queries.</li>
-                <li>Improving the efficiency of PDF processing and text extraction.</li>
+                <li>Improving the efficiency of Database processing and data extraction.</li>
                 <li>Adding support for more advanced natural language processing tasks.</li>
                 <li>Enhancing the user interface for better usability and user experience.</li>
-                <li>Optimizing performance and scalability for handling large PDF files and concurrent users.</li>
+                <li>Optimizing performance and scalability for handling large Database.</li>
             </ul>
         </section>
     </content>
