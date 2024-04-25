@@ -44,7 +44,7 @@ const LandingPage = () => {
 
   return (
     <motion.div
-      className="relative h-screen overflow-hidden"
+      className="relative h-screen overflow-hidden bg-gray-950"
       initial={{ opacity: 0, x: '0' }}
       animate={{ opacity: 1, x: '0' }}
       exit={{ opacity: 1, x: '-100%' }}

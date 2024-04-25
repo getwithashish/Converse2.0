@@ -8,7 +8,7 @@ export const SignInPage = () => {
   return (
     <>
         <motion.div
-          className="relative h-screen flex-col md:grid lg:max-w-none lg:grid-cols-2 lg:px-0"
+          className="relative h-screen flex-col md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 bg-gray-950"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
@@ -31,7 +31,7 @@ export const SignInPage = () => {
                   </p>
                 </div>
                 <motion.div
-                  className="grid-cols grid w-full items-center justify-center space-y-2 rounded-lg bg-neutral-800 p-4 text-center md:w-[450px]"
+                  className="grid-cols grid w-full items-center justify-center space-y-2 rounded-lg bg-gray-900 p-4 text-center md:w-[450px]"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 2 }}

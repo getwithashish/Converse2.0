@@ -48,7 +48,7 @@ const NeuralLines = () => (
           strokeWidth={7}
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
-          transition={{ duration: 10, delay: index * 0.1, repeat: Infinity }}
+          transition={{ duration: 1.5, delay: index * 0.1 }}
           strokeLinecap="round"
         />
       ))}

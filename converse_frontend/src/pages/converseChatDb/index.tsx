@@ -3,6 +3,7 @@ import { useMutation } from 'react-query';
 import axios from 'axios';
 import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
+import { LogoutButton } from '@/components/logout';
 
 const ChatDBPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -64,9 +65,7 @@ const ChatDBPage: React.FC = () => {
         <div className="p-4 text-lg" ref={textRef}>
           Converse
         </div>
-        <div className="absolute bottom-0 items-center justify-center p-4">
-          <Button className="text-xs">Logout</Button>
-        </div>
+        <LogoutButton/>
       </div>
       <div className="relative flex w-full flex-grow flex-col overflow-hidden bg-gradient-to-r from-gray-950 to-gray-900 p-5">
         <div className="flex flex-grow flex-col overflow-hidden p-5">
@@ -83,7 +82,7 @@ const ChatDBPage: React.FC = () => {
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
                     ? 'text-white'
-                    : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white'
+                    : 'bg-gradient-to-r from-gray-700 to-gray-800 text-white'
                 }`}
               >
                 {message.role === 'user' && <span className="mr-2">✨</span>}

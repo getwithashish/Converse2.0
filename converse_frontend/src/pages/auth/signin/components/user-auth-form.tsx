@@ -42,8 +42,6 @@ export default function UserAuthForm() {
       const response = await axios.post('http://127.0.0.1:5000/login', data);
       if (response.status === 200) {
         const responseData = response.data;
-        // const username = responseData.username;
-        // console.log('Logged in as:', username);
         console.log("RESPONSE: ", responseData.access_token)
         localStorage.setItem("authToken", responseData.access_token)
         router.push('/dashboard');
@@ -70,7 +68,7 @@ export default function UserAuthForm() {
                   disabled={false}
                   {...field}
                   {...register('username')}
-                  className="white-border bg-neutral-600"
+                  className="white-border bg-gray-600"
                 />
                 <FormLabel htmlFor="username" className={field.value ? 'active' : ''}></FormLabel>
                 <FormMessage>{errors.username && errors.username.message}</FormMessage>
@@ -88,7 +86,7 @@ export default function UserAuthForm() {
                   disabled={false}
                   {...field}
                   {...register('password')}
-                  className="white-border bg-neutral-600"
+                  className="white-border bg-gray-600"
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center justify-center pb-2 pr-3">
                   {showPassword ? (

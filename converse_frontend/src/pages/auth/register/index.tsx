@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export const RegisterPage = () => {
   return (
     <motion.div
-      className="relative h-screen flex-col md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 overflow-hidden"
+      className="relative h-screen flex-col md:grid lg:max-w-none lg:grid-cols-2 lg:px-0 overflow-hidden bg-gray-950"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
@@ -27,13 +27,13 @@ export const RegisterPage = () => {
                   Ready to talk?
                 </p>
               </div>
-            <motion.div className="grid-cols grid w-full items-end justify-center space-y-2 rounded-lg bg-neutral-800 p-4 text-center md:w-[550px]"
+            <motion.div className="grid-cols grid w-full items-end justify-center space-y-2 rounded-lg bg-gray-900 p-4 text-center md:w-[450px]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 2 }}
               style={{zIndex: 1}}
             >
-              <h1 className="text-left text-xl font-semibold tracking-tight md:w-[450px] ">
+              <h1 className="text-left text-xl font-semibold tracking-tight md:w-[400px] ">
                 Create an account
               </h1>
               <UserAuthForm />

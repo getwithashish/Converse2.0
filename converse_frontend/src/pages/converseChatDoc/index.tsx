@@ -3,6 +3,7 @@ import { useMutation } from 'react-query';
 import axios from 'axios';
 import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
+import { LogoutButton } from '@/components/logout';
 
 const ChatDocPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
@@ -11,46 +12,60 @@ const ChatDocPage: React.FC = () => {
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
 
   const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
-    (message: string | File) => {
-      if (typeof message === 'string') {
-        return axios.post('http://127.0.0.1:5000/chat_with_ai', { input_message: message }, {
+    (message: string) => {
+      return axios.post(
+        'http://127.0.0.1:5000/chat_with_doc',
+        { message },
+        {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-      } else {
-        const formData = new FormData();
-        formData.append('document', message);
-        return axios.post('http://127.0.0.1:5000/chat_with_doc', formData, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        });
-      }
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        }
+      );
     },
     {
       onSuccess: (response: any) => {
-        const reply = response.data.ai_response;
-        setMessages(prevMessages => [
-          ...prevMessages,
-          { role: 'user', content: inputMessage },
-          { role: 'ai', content: reply }
-        ]);
-        setInputMessage('');
-        setUploadSuccess(true);
+        if (response && response.data && response.data.ai_response) {
+          const reply = response.data.ai_response;
+          setMessages((prevMessages) => [
+            ...prevMessages,
+            { role: 'user', content: inputMessage },
+            { role: 'ai', content: reply },
+          ]);
+          setInputMessage('');
+        } else {
+          console.error('Invalid response received from server:', response);
+        }
       },
       onError: (error: any) => {
         console.error('Error sending message:', error);
-        setUploadSuccess(false);
-      }
+      },
     }
   );
+  
 
   const handleSendMessage = () => {
-    if (selectedFile) {
-      sendMessage(selectedFile);
-    } else {
+    if (inputMessage.trim() !== '') {
       sendMessage(inputMessage);
+    }
+  };
+
+  const handleFileUpload = async () => {
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('document', selectedFile);
+      try {
+        await axios.post('http://127.0.0.1:5000/upload_doc', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+        });
+        setUploadSuccess(true);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        setUploadSuccess(false);
+      }
     }
   };
 
@@ -61,8 +76,8 @@ const ChatDocPage: React.FC = () => {
     }
   };
 
-  const textRef = useRef(null);
-  const secRef = useRef(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const secRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (textRef.current) {
@@ -90,24 +105,17 @@ const ChatDocPage: React.FC = () => {
             onChange={handleFileChange}
             className="mb-2 rounded-lg w-auto bg-gray-400 p-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-green-500"
           />
-          {uploadSuccess === true && (
-            <p className="text-green-500">File uploaded successfully!</p>
-          )}
-          {uploadSuccess === false && (
-            <p className="text-red-500">Failed to upload file!</p>
-          )}
-          <Button className="text-xs">Upload File</Button>
+          <Button className="text-xs" onClick={handleFileUpload}>
+            Upload File
+          </Button>
+          {uploadSuccess === true && <p className="text-green-500">File uploaded successfully!</p>}
+          {uploadSuccess === false && <p className="text-red-500">Failed to upload file!</p>}
         </div>
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <Button className="text-xs">Logout</Button>
-        </div>
+        <LogoutButton />
       </div>
       <div className="relative flex w-full flex-grow flex-col overflow-hidden bg-gradient-to-r from-gray-950 to-gray-900 p-5">
         <div className="flex flex-grow flex-col overflow-hidden p-5">
-          <div
-            className="text-md text-left font-semibold tracking-tight md:text-lg lg:text-xl"
-            ref={secRef}
-          >
+          <div className="text-md text-left font-semibold tracking-tight md:text-lg lg:text-xl" ref={secRef}>
             Chat with Converse-Docs
           </div>
           <div className="chat-messages flex-grow">
@@ -117,7 +125,7 @@ const ChatDocPage: React.FC = () => {
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
                     ? 'text-white'
-                    : 'bg-gradient-to-r from-gray-600 to-gray-800 text-white'
+                    : 'bg-gradient-to-r from-gray-700 to-gray-800 text-white'
                 }`}
               >
                 {message.role === 'user' && <span className="mr-2">✨</span>}
@@ -161,7 +169,9 @@ const ChatDocPage: React.FC = () => {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className={`ml-4 h-6 w-6 cursor-pointer text-gray-500 ${isSendingMessage ? 'opacity-50 pointer-events-none' : ''}`}
+              className={`ml-4 h-6 w-6 cursor-pointer text-gray-500 ${
+                isSendingMessage ? 'opacity-50 pointer-events-none' : ''
+              }`}
               onClick={handleSendMessage}
             >
               <path
