@@ -13,6 +13,7 @@ RUN apk update && \
         libpq-dev \
         mariadb-dev \
         build-base \
+        cmake \
         pkgconf
 
 RUN apk --no-cache add curl
