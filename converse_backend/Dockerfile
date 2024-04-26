@@ -14,6 +14,7 @@ RUN apk update && \
         mariadb-dev \
         build-base \
         cmake \
+        swig3.0 \
         pkgconf
 
 RUN apk --no-cache add curl
