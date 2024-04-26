@@ -22,6 +22,8 @@ RUN curl -k -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/doc
 COPY requirements.txt /app/
 RUN pip install wheel
 RUN pip install --upgrade pip
+RUN pip install faiss-cpu
+RUN pip install pyarrow
 RUN pip install pyOpenSSL
 RUN pip install --no-cache-dir -r requirements.txt
 
