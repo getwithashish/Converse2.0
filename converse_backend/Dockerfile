@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.10-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -6,18 +6,19 @@ ENV ENVIRONMENT PRODUCTION
 
 WORKDIR /app
 
-RUN apk update && apk add --no-cache git ca-certificates && update-ca-certificates
-RUN apk update && \
-    apk add --no-cache \
+RUN apt-get update -y 
+RUN apt-get install -y git ca-certificates
+RUN apt-get update && \
+    apt-get install -y \
         python3-dev \
         libpq-dev \
-        mariadb-dev \
-        build-base \
+        libmariadb-dev \
+        build-essential \
         cmake \
         swig \
         pkgconf
 
-RUN apk --no-cache add curl
+RUN apt-get install curl
 RUN curl -k -L https://github.com/jwilder/dockerize/releases/download/v0.6.1/dockerize-linux-amd64-v0.6.1.tar.gz | tar -C /usr/local/bin -xzv
 
 COPY requirements.txt /app/
@@ -26,7 +27,7 @@ RUN pip install --upgrade pip
 # RUN pip install faiss-cpu
 RUN pip install pyarrow
 RUN pip install pyOpenSSL
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . /app/
 

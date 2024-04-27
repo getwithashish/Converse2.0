@@ -10,7 +10,7 @@ class PopulateDB:
 
     def __init__(self):
         self.engine = create_engine(
-            "postgresql://postgres:password@localhost:5432/postgres"
+            "postgresql://postgres:password@postgresql-db-service:5432/postgres"
         )
         self.metadata_obj = MetaData()
 
