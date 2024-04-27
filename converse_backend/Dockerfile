@@ -33,4 +33,5 @@ COPY . /app/
 
 EXPOSE 8000
 
-RUN python main.py
+RUN chmod +x deploy.sh
+CMD ["sh", "deploy.sh"]
