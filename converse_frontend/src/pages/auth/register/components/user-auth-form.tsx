@@ -36,7 +36,7 @@ export default function UserAuthForm() {
   const onSubmit = async (data) => {
     setLoading(true); 
     try {
-      const response = await axios.post('/register', data);
+      const response = await axios.post('http://20.44.62.11:8000/register', data);
   
       if (response.status === 201) {
         console.log('User created successfully:', response.data.msg);
