@@ -11,7 +11,10 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and user.check_password(password):
-        access_token = create_access_token(identity=username)
+        additional_claims = {"user_id": user.id}
+        access_token = create_access_token(
+            identity=username, additional_claims=additional_claims
+        )
         return jsonify(access_token=access_token), 200
     else:
         return jsonify({"msg": "Invalid username or password"}), 401

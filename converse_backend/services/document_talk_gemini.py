@@ -1,3 +1,4 @@
+import os
 import google.generativeai as genai
 import google.ai.generativelanguage as glm
 from PyPDF2 import PdfReader
@@ -29,10 +30,22 @@ def get_text_chunks(text):
     return chunks
 
 
-def get_vector_store(chunks):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=GOOGLE_API_KEY)
-    vector_store = FAISS.from_texts(chunks, embedding=embeddings)
-    vector_store.save_local("faiss_index")
+def get_vector_store(chunks, prefix_name):
+    index_path = f"faiss_indices/{prefix_name}-faiss_index"
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001", google_api_key=GOOGLE_API_KEY
+    )
+    if os.path.exists(index_path):
+        vector_store = FAISS.load_local(
+            index_path,
+            embeddings,
+            allow_dangerous_deserialization=True,
+        )
+        new_vector_store = FAISS.from_texts(chunks, embedding=embeddings)
+        vector_store.merge_from(new_vector_store)
+    else:
+        vector_store = FAISS.from_texts(chunks, embedding=embeddings)
+    vector_store.save_local(index_path)
 
 
 def get_conversational_chain():
@@ -46,10 +59,7 @@ def get_conversational_chain():
     """
 
     model = ChatGoogleGenerativeAI(
-        model="gemini-pro",
-        client=genai,
-        temperature=0.3,
-        google_api_key=GOOGLE_API_KEY
+        model="gemini-pro", client=genai, temperature=0.3, google_api_key=GOOGLE_API_KEY
     )
     prompt = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
@@ -58,11 +68,15 @@ def get_conversational_chain():
     return chain
 
 
-def handle_prompt(prompt):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=GOOGLE_API_KEY)
+def handle_prompt(prompt, prefix_name):
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001", google_api_key=GOOGLE_API_KEY
+    )
 
     new_db = FAISS.load_local(
-        "faiss_index", embeddings, allow_dangerous_deserialization=True
+        f"faiss_indices/{prefix_name}-faiss_index",
+        embeddings,
+        allow_dangerous_deserialization=True,
     )
     docs = new_db.similarity_search(prompt)
 
@@ -77,16 +91,16 @@ def handle_prompt(prompt):
     return response
 
 
-def create_faiss_index(file):
+def create_faiss_index(file, prefix_name):
     raw_text = get_pdf_text(file)
     text_chunks = get_text_chunks(raw_text)
-    get_vector_store(text_chunks)
+    get_vector_store(text_chunks, prefix_name)
 
 
-def generate_document_gemini_response(prompt):
+def generate_document_gemini_response(prompt, prefix_name):
     # raw_text = get_pdf_text(file)
     # text_chunks = get_text_chunks(raw_text)
     # get_vector_store(text_chunks)
 
-    response = handle_prompt(prompt)
+    response = handle_prompt(prompt, prefix_name)
     return response

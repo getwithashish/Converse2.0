@@ -21,7 +21,8 @@ decorator==5.1.1
 exceptiongroup==1.2.0
 executing==2.0.1
 extra-streamlit-components==0.1.71
-faiss-cpu==1.8.0
+# faiss-cpu==1.8.0
+faiss-cpu==1.7.2
 Flask==3.0.3
 Flask-JWT-Extended==4.6.0
 Flask-SQLAlchemy==3.1.1
@@ -78,7 +79,7 @@ protobuf==4.25.3
 psutil==5.9.8
 psycopg2==2.9.9
 pure-eval==0.2.2
-pyarrow==15.0.2
+# pyarrow==15.0.2
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
 pycparser==2.22
@@ -93,7 +94,6 @@ PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
-pywin32==306
 PyYAML==6.0.1
 pyzmq==25.1.2
 referencing==0.34.0
@@ -105,8 +105,6 @@ six==1.16.0
 smmap==5.0.1
 SQLAlchemy==2.0.29
 stack-data==0.6.3
-streamlit==1.33.0
-streamlit-authenticator==0.3.2
 tenacity==8.2.3
 toml==0.10.2
 toolz==0.12.1
