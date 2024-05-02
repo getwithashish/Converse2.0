@@ -21,4 +21,5 @@ def chatWithDb():
 def populateDb():
     populateDb = PopulateDB()
     populateDb.create_tables()
-    return jsonify({"message": "Successfully Populated"}), 200
+    table_names = populateDb.list_tables()
+    return jsonify({"message": table_names}), 200
