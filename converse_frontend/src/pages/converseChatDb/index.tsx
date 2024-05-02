@@ -14,7 +14,7 @@ const ChatDBPage: React.FC = () => {
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
       axios.post(
-        import.meta.env.VITE_CONVERSE_URL + 'chat_with_db',
+        import.meta.env.VITE_CONVERSE_URL + '/chat_with_db',
         { input_message: inputMessage },
         {
           headers: {
