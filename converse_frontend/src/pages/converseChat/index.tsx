@@ -146,21 +146,24 @@ const ChatPage: React.FC = () => {
   const handleChatItemClick = async (chatId: number) => {
     try {
       const response = await axios.get(
-        import.meta.env.VITE_CONVERSE_URL + `/normal_chat_history?chat_id=${chatId}`,
+        import.meta.env.VITE_CONVERSE_URL +
+          `/normal_chat_history?chat_id=${chatId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }
         }
       );
-  
+
       const chatHistoryData = response.data;
       console.log('Chat history data:', chatHistoryData);
       if (chatHistoryData.hasOwnProperty('chat_history')) {
-        const formattedChatHistory = chatHistoryData.chat_history.map((message: any) => ({
-          role: message.role,
-          content: message.text 
-        }));
+        const formattedChatHistory = chatHistoryData.chat_history.map(
+          (message: any) => ({
+            role: message.role,
+            content: message.text
+          })
+        );
         setMessages(formattedChatHistory);
       } else {
         console.error('Chat history not found in response:', chatHistoryData);
@@ -169,7 +172,12 @@ const ChatPage: React.FC = () => {
       console.error('Error fetching chat history:', error);
     }
   };
-  
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setChatId(null);
+};
+
 
   return (
     <div className="flex h-screen">
@@ -218,6 +226,13 @@ const ChatPage: React.FC = () => {
             <ul className="mt-4 flex flex-col items-center justify-center rounded-lg border border-gray-100 bg-gray-50 p-4 text-xs font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900 rtl:space-x-reverse">
               <li className='md:p-0" block rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent'>
                 <UserName />
+              </li>
+              <li
+                className='md:p-0" group relative block cursor-pointer rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent'
+                onClick={handleNewChat}
+              >
+                New Chat
+                <span className="absolute bottom-0 left-0 h-[1px] w-full scale-x-0 transform bg-blue-800 transition-transform duration-500 group-hover:scale-x-100"></span>
               </li>
               <li>
                 <Link
