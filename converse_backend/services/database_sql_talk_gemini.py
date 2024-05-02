@@ -1,11 +1,14 @@
 import google.generativeai as genai
 import google.ai.generativelanguage as glm
-import json
 
+from utils.decouple_config_util import DecoupleConfigUtil
 from services.populate_db import PopulateDB
 
 
-GOOGLE_API_KEY = "AIzaSyDTzAF3jNsbktskJLC_EIBz0_QKPFdnHds"
+config = DecoupleConfigUtil.get_env_config()
+
+
+GOOGLE_API_KEY = config("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY, transport="rest")
 
 postgres_db = PopulateDB()

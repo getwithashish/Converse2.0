@@ -10,23 +10,30 @@ from controllers.chat_with_doc import (
     getUploadedDocsList,
     uploadDoc,
 )
+from utils.decouple_config_util import DecoupleConfigUtil
 from models.models import db
 from controllers.register import register
 from controllers.login import login
 
 
-app = Flask(__name__)
-app.secret_key = "this_is_my_secret_key"
+config = DecoupleConfigUtil.get_env_config()
 
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql://postgres:password@localhost:5432/postgres"
-)
-app.config["JWT_SECRET_KEY"] = "this_is_my_secret_jwt_secret_key"
+
+app = Flask(__name__)
+app.secret_key = config("APP_SECRET_KEY")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = config("DATABASE_URI")
+app.config["JWT_SECRET_KEY"] = config("JWT_SECRET_KEY")
 
 db.init_app(app)
 jwt = JWTManager(app)
 
-CORS(app, origins=["http://localhost:5173", "http://20.44.62.11:5173"])
+CORS(
+    app,
+    origins=config(
+        "CORS_ORIGINS", cast=lambda v: [item.strip() for item in v.split(",")]
+    ),
+)
 
 with app.app_context():
     db.create_all()
@@ -45,5 +52,5 @@ app.route("/upload_doc", methods=["DELETE"], endpoint="delete_uploaded_docs")(
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, host="0.0.0.0", port=8000)
-    app.run(debug=True)
+    app.run(debug=True, host=config("HOST"), port=config("PORT"))
+    # app.run(debug=True)

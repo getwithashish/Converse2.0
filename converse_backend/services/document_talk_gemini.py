@@ -10,8 +10,13 @@ from langchain.vectorstores import FAISS
 from langchain.prompts import PromptTemplate
 from langchain.chains.question_answering import load_qa_chain
 
+from utils.decouple_config_util import DecoupleConfigUtil
 
-GOOGLE_API_KEY = "AIzaSyDTzAF3jNsbktskJLC_EIBz0_QKPFdnHds"
+
+config = DecoupleConfigUtil.get_env_config()
+
+
+GOOGLE_API_KEY = config("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY, transport="rest")
 
 
@@ -98,9 +103,5 @@ def create_faiss_index(file, prefix_name):
 
 
 def generate_document_gemini_response(prompt, prefix_name):
-    # raw_text = get_pdf_text(file)
-    # text_chunks = get_text_chunks(raw_text)
-    # get_vector_store(text_chunks)
-
     response = handle_prompt(prompt, prefix_name)
     return response
