@@ -4,14 +4,22 @@ import axios from 'axios';
 import { gsap } from 'gsap';
 import { UserName } from '@/components/username';
 import { Link, useNavigate } from 'react-router-dom';
+import ChatResponse from '@/components/chatResponse';
 
 const ChatPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
     []
   );
   const [inputMessage, setInputMessage] = useState('');
+  const [chatId, setChatId] = useState<number | null>(null);
   const handleSendMessage = () => {
-    mutate(inputMessage);
+    if (inputMessage.trim() === '') return;
+
+    if (chatId === null) {
+      mutate({ inputMessage, chatId: null });
+    } else {
+      mutate({ inputMessage, chatId: chatId.toString() });
+    }
   };
 
   const textRef = useRef(null);
@@ -19,7 +27,6 @@ const ChatPage: React.FC = () => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChooseMenuOpen, setIsChooseMenuOpen] = useState(false);
-  const [isViewHistoryOpen, setIsViewHistoryOpen] = useState(false);
 
   const [chatHistory, setChatHistory] = useState<
     { chat_id: number; chat_name: string }[]
@@ -40,10 +47,19 @@ const ChatPage: React.FC = () => {
   };
 
   const { mutate, isLoading } = useMutation(
-    (inputMessage: string) =>
+    ({
+      inputMessage,
+      chatId
+    }: {
+      inputMessage: string;
+      chatId: string | null;
+    }) =>
       axios.post(
         import.meta.env.VITE_CONVERSE_URL + '/chat_with_ai',
-        { input_message: inputMessage },
+        {
+          input_message: inputMessage,
+          chat_id: chatId // Send chat_id in the request body
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -59,6 +75,7 @@ const ChatPage: React.FC = () => {
           { role: 'ai', content: aiReply }
         ]);
         setInputMessage('');
+        setChatId(response.data.chat_id); // Update chatId with the new value
       },
       onError: (error: any) => {
         console.error('Error sending message:', error);
@@ -97,12 +114,21 @@ const ChatPage: React.FC = () => {
   const fetchChatHistory = async () => {
     setIsLoadingHistory(true);
     try {
-      const response = await axios.get(import.meta.env.VITE_CONVERSE_URL + '/normal_chat_history_list', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      const response = await axios.get(
+        import.meta.env.VITE_CONVERSE_URL + '/normal_chat_history_list',
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          }
         }
-      });
-      setChatHistory(response.data.chat_history_list);
+      );
+      const updatedChatHistory = response.data.chat_history_list.map(
+        (chat: any) => ({
+          chat_id: chat.chat_id,
+          chat_name: chat.chat_name
+        })
+      );
+      setChatHistory(updatedChatHistory);
     } catch (error) {
       console.error('Error fetching chat history:', error);
     } finally {
@@ -116,6 +142,35 @@ const ChatPage: React.FC = () => {
       fetchChatHistory();
     }
   };
+
+  const handleChatItemClick = async (chatId: number) => {
+    try {
+      const response = await axios.get(
+        import.meta.env.VITE_CONVERSE_URL + `/normal_chat_history?chat_id=${chatId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+          }
+        }
+      );
+  
+      const chatHistoryData = response.data;
+  
+      // Check if chat_history exists in chatHistoryData
+      if (chatHistoryData.hasOwnProperty('chat_history')) {
+        const formattedChatHistory = chatHistoryData.chat_history.map((message: any) => ({
+          role: message.role,
+          content: message.text // Assuming the text property holds the message content
+        }));
+        setMessages(formattedChatHistory);
+      } else {
+        console.error('Chat history not found in response:', chatHistoryData);
+      }
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
+    }
+  };
+  
 
   return (
     <div className="flex h-screen">
@@ -252,27 +307,33 @@ const ChatPage: React.FC = () => {
           </>
         )}
         {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-8 w-96">
-            <h2 className="text-lg font-semibold mb-4">Chat History</h2>
-            {isLoadingHistory ? (
-              <div>Loading chat history...</div>
-            ) : (
-              <ul className="overflow-y-auto max-h-60">
-                {chatHistory.map((chat, index) => (
-                  <li key={index}>{chat.chat_name}</li>
-                ))}
-              </ul>
-            )}
-            <button
-              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-              onClick={toggleViewHistory}
-            >
-              Close
-            </button>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="w-96 rounded-lg bg-white p-8 dark:bg-gray-900">
+              <h2 className="mb-4 text-lg font-semibold">Chat History</h2>
+              {isLoadingHistory ? (
+                <div>Loading chat history...</div>
+              ) : (
+                <ul className="max-h-60 overflow-y-auto">
+                  {chatHistory.map((chat, index) => (
+                    <li
+                      className="m-2 cursor-pointer rounded-xl bg-gray-950 p-2"
+                      key={index}
+                      onClick={() => handleChatItemClick(chat.chat_id)}
+                    >
+                      {chat.chat_name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <button
+                className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                onClick={toggleViewHistory}
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </nav>
       <div className="relative flex w-full flex-grow flex-col overflow-hidden bg-gradient-to-r from-gray-950 to-gray-900 p-5 pt-20 lg:pt-10">
         <div className="flex flex-grow flex-col overflow-hidden p-5">
@@ -294,7 +355,10 @@ const ChatPage: React.FC = () => {
               >
                 {message.role === 'user' && <span className="mr-2">✨</span>}
                 {message.role === 'ai' && <span className="mr-2">🤖</span>}
-                {message.content}
+                {message.role === 'ai' && (
+                  <ChatResponse response={message.content} />
+                )}
+                {message.role !== 'ai' && message.content}
               </div>
             ))}
             {isLoading && (
