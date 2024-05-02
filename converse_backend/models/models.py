@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -48,4 +49,23 @@ class UploadedDocuments(db.Model):
         for doc in documents:
             db.session.delete(doc)
 
+        db.session.commit()
+
+
+class NormalChatHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    chat_history = db.Column(db.JSON)
+    started_at = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+
+    def __repr__(self):
+        return "<NormalChatHistory %r>" % self.id + "-" + self.user_id
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def delete_all(self, chat_history):
+        for chat in chat_history:
+            db.session.delete(chat)
         db.session.commit()
