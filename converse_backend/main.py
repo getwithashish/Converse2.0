@@ -2,7 +2,12 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 
-from controllers.chat_with_ai import chatWithAi
+from controllers.chat_with_ai import (
+    chatWithAi,
+    deleteNormalChatHistory,
+    getNormalChatHistory,
+    getNormalChatHistoryList,
+)
 from controllers.chat_with_db import chatWithDb
 from controllers.chat_with_doc import (
     chatWithDoc,
@@ -17,7 +22,6 @@ from controllers.login import login
 
 
 config = DecoupleConfigUtil.get_env_config()
-
 
 app = Flask(__name__)
 app.secret_key = config("APP_SECRET_KEY")
@@ -44,6 +48,9 @@ app.route("/login", methods=["POST"])(login)
 app.route("/chat_with_db", methods=["POST"])(chatWithDb)
 app.route("/chat_with_doc", methods=["POST"])(chatWithDoc)
 app.route("/chat_with_ai", methods=["POST"])(chatWithAi)
+app.route("/normal_chat_history_list", methods=["GET"])(getNormalChatHistoryList)
+app.route("/normal_chat_history_list", methods=["DELETE"])(deleteNormalChatHistory)
+app.route("/normal_chat_history", methods=["GET"])(getNormalChatHistory)
 app.route("/upload_doc", methods=["POST"])(uploadDoc)
 app.route("/upload_doc", methods=["GET"])(getUploadedDocsList)
 app.route("/upload_doc", methods=["DELETE"], endpoint="delete_uploaded_docs")(

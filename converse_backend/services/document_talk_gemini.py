@@ -1,6 +1,5 @@
 import os
 import google.generativeai as genai
-import google.ai.generativelanguage as glm
 from PyPDF2 import PdfReader
 
 # from langchain_text_splitters import RecursiveCharacterTextSplitter

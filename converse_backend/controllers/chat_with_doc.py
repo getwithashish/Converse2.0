@@ -12,6 +12,7 @@ from services.document_talk_gemini import (
 
 @jwt_required()
 def chatWithDoc():
+    # file = request.files['file']
     user_id = get_jwt().get("user_id", None)
     prompt = request.json.get("input_message", None)
     if prompt:
