@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  postgresql-db-service:
+    container_name: postgresql-db
+    image: "postgres:latest"
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    ports:
+      - 5432:5432
+
+  # Production Environment
+
+  converse-backend-service:
+    container_name: converse-management-backend
+    image: converse-backend-image
+    build: ./converse_backend/
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      - postgresql-db-service
+
+  converse-frontend-service:
+    container_name: converse-management-frontend
+    image: converse-frontend-image
+    build: ./converse_frontend/
+    ports:
+      - 5173:5173
+    restart: always
+    depends_on:
+      - converse-backend-service
