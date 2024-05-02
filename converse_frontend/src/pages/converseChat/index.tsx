@@ -42,7 +42,7 @@ const ChatPage: React.FC = () => {
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
       axios.post(
-        import.meta.env.VITE_CONVERSE_URL + 'chat_with_ai',
+        import.meta.env.VITE_CONVERSE_URL + '/chat_with_ai',
         { input_message: inputMessage },
         {
           headers: {
@@ -97,7 +97,7 @@ const ChatPage: React.FC = () => {
   const fetchChatHistory = async () => {
     setIsLoadingHistory(true);
     try {
-      const response = await axios.get('http://20.44.62.11:8000/normal_chat_history_list', {
+      const response = await axios.get(import.meta.env.VITE_CONVERSE_URL + '/normal_chat_history_list', {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }

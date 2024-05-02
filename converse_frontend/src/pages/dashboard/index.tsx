@@ -264,7 +264,7 @@ export const Dashboard = () => {
                 <div className="lg:pd-8 p-4 md:justify-between md:p-6 lg:justify-center">
                   <div className="flex items-center transition duration-300 ease-in-out hover:scale-105 hover:rounded-xl hover:bg-gray-900 lg:p-4">
                     <Link
-                      to={'/chat'}
+                      to={'/chat_with_ai'}
                       className="group relative p-4 text-[#750ad9] "
                     >
                       <div className="flex items-center rounded-lg">
