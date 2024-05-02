@@ -5,13 +5,16 @@ from sqlalchemy import text
 
 import json
 
+from utils.decouple_config_util import DecoupleConfigUtil
+
+
+config = DecoupleConfigUtil.get_env_config()
+
 
 class PopulateDB:
 
     def __init__(self):
-        self.engine = create_engine(
-            "postgresql://postgres:password@localhost:5432/postgres"
-        )
+        self.engine = create_engine(config("DATABASE_URI"))
         self.metadata_obj = MetaData()
 
         self.metadata_obj.reflect(bind=self.engine)
