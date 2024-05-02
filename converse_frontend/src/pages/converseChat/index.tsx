@@ -58,7 +58,7 @@ const ChatPage: React.FC = () => {
         import.meta.env.VITE_CONVERSE_URL + '/chat_with_ai',
         {
           input_message: inputMessage,
-          chat_id: chatId // Send chat_id in the request body
+          chat_id: chatId
         },
         {
           headers: {
@@ -75,7 +75,7 @@ const ChatPage: React.FC = () => {
           { role: 'ai', content: aiReply }
         ]);
         setInputMessage('');
-        setChatId(response.data.chat_id); // Update chatId with the new value
+        setChatId(response.data.chat_id);
       },
       onError: (error: any) => {
         console.error('Error sending message:', error);
@@ -155,12 +155,11 @@ const ChatPage: React.FC = () => {
       );
   
       const chatHistoryData = response.data;
-  
-      // Check if chat_history exists in chatHistoryData
+      console.log('Chat history data:', chatHistoryData);
       if (chatHistoryData.hasOwnProperty('chat_history')) {
         const formattedChatHistory = chatHistoryData.chat_history.map((message: any) => ({
           role: message.role,
-          content: message.text // Assuming the text property holds the message content
+          content: message.text 
         }));
         setMessages(formattedChatHistory);
       } else {
