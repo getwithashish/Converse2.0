@@ -10,10 +10,39 @@ const ChatPage: React.FC = () => {
     []
   );
   const [inputMessage, setInputMessage] = useState('');
+  const handleSendMessage = () => {
+    mutate(inputMessage);
+  };
+
+  const textRef = useRef(null);
+  const secRef = useRef(null);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChooseMenuOpen, setIsChooseMenuOpen] = useState(false);
+  const [isViewHistoryOpen, setIsViewHistoryOpen] = useState(false);
+
+  const [chatHistory, setChatHistory] = useState<
+    { chat_id: number; chat_name: string }[]
+  >([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleChooseMenu = () => {
+    setIsChooseMenuOpen(!isChooseMenuOpen);
+  };
+
+  const handleOptionClick = () => {
+    setIsChooseMenuOpen(false);
+  };
+
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
       axios.post(
-        'http://127.0.0.1:5000/chat_with_ai',
+        import.meta.env.VITE_CONVERSE_URL + 'chat_with_ai',
         { input_message: inputMessage },
         {
           headers: {
@@ -36,13 +65,6 @@ const ChatPage: React.FC = () => {
       }
     }
   );
-
-  const handleSendMessage = () => {
-    mutate(inputMessage);
-  };
-
-  const textRef = useRef(null);
-  const secRef = useRef(null);
 
   useEffect(() => {
     if (textRef.current) {
@@ -72,25 +94,29 @@ const ChatPage: React.FC = () => {
     navigate('/landing');
   };
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isChooseMenuOpen, setIsChooseMenuOpen] = useState(false);
-  const [isViewHistoryOpen, setIsViewHistoryOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
-  const toggleChooseMenu = () => {
-    setIsChooseMenuOpen(!isChooseMenuOpen);
-  };
-
-  const handleOptionClick = () => {
-    setIsChooseMenuOpen(false);
+  const fetchChatHistory = async () => {
+    setIsLoadingHistory(true);
+    try {
+      const response = await axios.get('http://20.44.62.11:8000/normal_chat_history_list', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      setChatHistory(response.data.chat_history_list);
+    } catch (error) {
+      console.error('Error fetching chat history:', error);
+    } finally {
+      setIsLoadingHistory(false);
+    }
   };
 
   const toggleViewHistory = () => {
-    setIsViewHistoryOpen(!isViewHistoryOpen);
-  }
+    setIsModalOpen(!isModalOpen);
+    if (!isModalOpen) {
+      fetchChatHistory();
+    }
+  };
+
   return (
     <div className="flex h-screen">
       <nav className="fixed start-0 top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
@@ -160,7 +186,9 @@ const ChatPage: React.FC = () => {
                 className='md:p-0" group relative block cursor-pointer rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent
               '
                 onClick={toggleViewHistory}
-              >View Chat History</li>
+              >
+                View Chat History
+              </li>
               <li>
                 <Link
                   to={'/register'}
@@ -190,7 +218,7 @@ const ChatPage: React.FC = () => {
                 <ul className="mt-4 flex flex-col items-end justify-end rounded-lg border border-gray-100 bg-gray-50 p-4 text-xs font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900 rtl:space-x-reverse">
                   <li>
                     <Link
-                      to={'/chat'}
+                      to={'/chat_with_ai'}
                       onClick={handleOptionClick}
                       className="group relative block rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent md:p-0"
                     >
@@ -223,11 +251,28 @@ const ChatPage: React.FC = () => {
             </div>
           </>
         )}
-        {isViewHistoryOpen&&(
-          <>
-          
-          </>
-        )}
+        {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white dark:bg-gray-900 rounded-lg p-8 w-96">
+            <h2 className="text-lg font-semibold mb-4">Chat History</h2>
+            {isLoadingHistory ? (
+              <div>Loading chat history...</div>
+            ) : (
+              <ul className="overflow-y-auto max-h-60">
+                {chatHistory.map((chat, index) => (
+                  <li key={index}>{chat.chat_name}</li>
+                ))}
+              </ul>
+            )}
+            <button
+              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+              onClick={toggleViewHistory}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
       </nav>
       <div className="relative flex w-full flex-grow flex-col overflow-hidden bg-gradient-to-r from-gray-950 to-gray-900 p-5 pt-20 lg:pt-10">
         <div className="flex flex-grow flex-col overflow-hidden p-5">

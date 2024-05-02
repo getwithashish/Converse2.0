@@ -80,7 +80,7 @@ export default function AppRouter() {
     },
     
     {
-      path: '/chat',
+      path: '/chat_with_ai',
       // element: <PrivateRoute path="/chat" element={<ChatPage />} />,
       element: <ChatPage/>
     },

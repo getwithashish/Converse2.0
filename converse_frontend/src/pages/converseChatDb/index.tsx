@@ -14,7 +14,7 @@ const ChatDBPage: React.FC = () => {
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
       axios.post(
-        'http://127.0.0.1:5000/chat_with_db',
+        import.meta.env.VITE_CONVERSE_URL + 'chat_with_db',
         { input_message: inputMessage },
         {
           headers: {
@@ -184,7 +184,7 @@ const ChatDBPage: React.FC = () => {
                 <ul className="mt-4 flex flex-col items-end justify-end rounded-lg border border-gray-100 bg-gray-50 p-4 text-xs font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900 rtl:space-x-reverse">
                   <li>
                     <Link
-                      to={'/chat'}
+                      to={'/chat_with_ai'}
                       onClick={handleOptionClick}
                       className="group relative block rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent md:p-0"
                     >

@@ -36,18 +36,18 @@ export default function UserAuthForm() {
   const onSubmit = async (data) => {
     setLoading(true); 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/register', data);
+      const response = await axios.post(import.meta.env.VITE_CONVERSE_URL + '/register', data);
   
       if (response.status === 201) {
         console.log('User created successfully:', response.data.msg);
-        router.push('/signin'); // Redirect to login page after successful registration
+        router.push('/signin');
       } else {
         console.error('Registration error:', response.data.msg);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during registration:', error.message);
     } finally {
-      setLoading(false);
+      setLoading(false);  
     }
   };
 
