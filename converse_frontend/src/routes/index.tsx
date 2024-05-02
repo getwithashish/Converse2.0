@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes, useLocation } from 'react-router-dom';
-import { Dashboard } from '@/pages/dashboard';
+// import { Dashboard } from '@/pages/dashboard';
+import {Dashboard} from '@/pages/dashboard';
 import { SignInPage } from '@/pages/auth/signin';
 import { RegisterPage } from '@/pages/auth/register';
 import ChatPage from '@/pages/converseChat';

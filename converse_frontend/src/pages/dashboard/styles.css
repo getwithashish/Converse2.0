@@ -1,50 +1,31 @@
 body {
-    --black: #000000;
-    --ash-black: #222;
-    --white: #fafafa;
-    --sky: #00ccff;
-    --green: #22dddd;
-    --blue: #1300ff;
-    --dusk: #6600ff;
-    --purple: #9900ff;
-    --pink: #ff0066;
-    --red: #fe0222;
-    --orange: #fd7702;
-    --yellow: #ffbb00;
+  --black: #000000;
+  --ash-black: #222;
+  --white: #fafafa;
+  --sky: #00ccff;
+  --green: #22dddd;
+  --blue: #1300ff;
+  --dusk: #6600ff;
+  --purple: #9900ff;
+  --pink: #ff0066;
+  --red: #fe0222;
+  --orange: #fd7702;
+  --yellow: #ffbb00;
+}
 
-    --accent: var(--white);
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--purple);
+  transform-origin: 0%;
+}
+
+img{
+  width:18%;
+}
 
 
-  }
-  
-  .box {
-    width: 20px;
-    height: 20px;
-    background: var(--accent);
-  }
-  
-  .hover-effect{
-    width: max-content;
-    margin: auto;
-    position: relative;
-    cursor: pointer;
-  }
 
-  .hover-effect::after{
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background-color:#22dddd;
-    left: 0;
-    bottom: -2px;
-    transition: 0.5s;
-    transform: rotateY(90deg);
-    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-origin: left;
-    
-  }
-
-  .hover-effect:hover::after{
-    transform: rotateY(0);
-  }

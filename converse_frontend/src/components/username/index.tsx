@@ -22,8 +22,9 @@ export const UserName = () => {
   }, []);
 
     return (
-        <div className="justify-end space-y-2 text-xs tracking-tight md:space-y-4">
+        <>
         {username ? `Hi, ${username}` : 'User'}
-        </div>
+        </>
+        
     );
     };
