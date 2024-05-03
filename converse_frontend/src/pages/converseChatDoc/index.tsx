@@ -5,7 +5,7 @@ import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
 import { UserName } from '@/components/username';
 import { Link, useNavigate } from 'react-router-dom';
-import { InstructionModal } from '../converseChatDb/components/instructionIndex';
+import { InstructionModal } from './components/instructionIndex';
 
 const ChatDocPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -209,7 +209,8 @@ const ChatDocPage: React.FC = () => {
                 <UserName />
               </li>
               <li
-                className='group relative block cursor-pointer rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent md:p-0'
+                className='group relative block cursor-pointer rounded px-3 py-2 text-[#01d0ff] border border-1 border-[#01d0ff] transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent
+                '
                 onClick={toggleInstructions}
               >
                 View Instructions

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { gsap } from 'gsap';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserName } from '@/components/username';
+import { InstructionModal } from './components/instructionsIndex';
 
 
 const ChatDBPage: React.FC = () => {
@@ -12,6 +13,10 @@ const ChatDBPage: React.FC = () => {
   );
   const [inputMessage, setInputMessage] = useState('');
   const [isSessionExpired, setIsSessionExpired] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const toggleInstructions = () => {
+    setShowInstructions(!showInstructions);
+  };
   const { mutate, isLoading } = useMutation(
     (inputMessage: string) =>
       axios.post(
@@ -98,6 +103,7 @@ const ChatDBPage: React.FC = () => {
     setIsChooseMenuOpen(false); 
   };
 
+
   return (
     <div className="flex h-screen">
               <nav className="fixed start-0 top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
@@ -144,9 +150,21 @@ const ChatDBPage: React.FC = () => {
               id="navbar-sticky"
             >
               <ul className="mt-4 flex flex-col items-center justify-center rounded-lg border border-gray-100 bg-gray-50 p-4 text-xs font-medium dark:border-gray-700 dark:bg-gray-800 md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-white md:p-0 md:dark:bg-gray-900 rtl:space-x-reverse">
-                <li className='md:p-0" block rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent'>
+                <li className='md:p-0" block rounded px-3 py-2 text-white  transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent'>
                   <UserName />
                 </li>
+                <li
+                onClick={toggleInstructions}
+                className='md:p-0" group relative block cursor-pointer rounded px-3 py-2 text-[#01d0ff] border border-1 border-[#01d0ff] transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent
+              '
+              >
+                View Instructions
+                {showInstructions && (
+                  <InstructionModal onClose={toggleInstructions} />
+                )}
+                <span className="absolute bottom-0 left-0 h-[1px] w-full scale-x-0 transform bg-blue-800 transition-transform duration-500 group-hover:scale-x-100"></span>
+              
+              </li>
                 <li>
                   <Link
                     to={'/landing'}

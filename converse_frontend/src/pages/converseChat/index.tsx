@@ -235,7 +235,8 @@ const ChatPage: React.FC = () => {
                 <UserName />
               </li>
               <li
-                className='md:p-0" group relative block cursor-pointer rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent'
+                className='group relative block cursor-pointer rounded px-3 py-2 text-[#01d0ff] border border-1 border-[#01d0ff] transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent
+                '
                 onClick={handleNewChat}
               >
                 New Chat
