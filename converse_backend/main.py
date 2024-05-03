@@ -8,7 +8,7 @@ from controllers.chat_with_ai import (
     getNormalChatHistory,
     getNormalChatHistoryList,
 )
-from controllers.chat_with_db import chatWithDb
+from controllers.chat_with_db import chatWithDb, populateDb
 from controllers.chat_with_doc import (
     chatWithDoc,
     deleteUploadedDocs,
@@ -56,6 +56,7 @@ app.route("/upload_doc", methods=["GET"])(getUploadedDocsList)
 app.route("/upload_doc", methods=["DELETE"], endpoint="delete_uploaded_docs")(
     deleteUploadedDocs
 )
+app.route("/populate_db", methods=["POST"])(populateDb)
 
 
 if __name__ == "__main__":
