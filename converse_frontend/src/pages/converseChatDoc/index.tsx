@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { Button } from '@/components/ui/button';
 import { UserName } from '@/components/username';
 import { Link, useNavigate } from 'react-router-dom';
+import { InstructionModal } from '../converseChatDb/components/instructionIndex';
 
 const ChatDocPage: React.FC = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>(
@@ -14,6 +15,12 @@ const ChatDocPage: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
   const [isSessionExpired, setIsSessionExpired] = useState(false);
+  const [noDocumentUpload, setNoDocumentUpload] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+
+  const toggleInstructions = () => {
+    setShowInstructions(!showInstructions);
+  };
 
   const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
     (message: string) => {
@@ -43,8 +50,8 @@ const ChatDocPage: React.FC = () => {
       },
       onError: (error: any) => {
         console.error('Error sending message:', error);
-        if(error.response && error.response.status === 401){
-          setIsSessionExpired(true)
+        if (error.response && error.response.status === 401) {
+          setIsSessionExpired(true);
         }
       }
     }
@@ -54,8 +61,11 @@ const ChatDocPage: React.FC = () => {
     navigate('/signin');
   };
 
-
   const handleSendMessage = () => {
+    if (!selectedFile) {
+      setNoDocumentUpload(true);
+    }
+
     if (inputMessage.trim() !== '') {
       sendMessage(inputMessage);
     }
@@ -73,17 +83,30 @@ const ChatDocPage: React.FC = () => {
       const formData = new FormData();
       formData.append('file', selectedFile);
       try {
-        await axios.post( import.meta.env.VITE_CONVERSE_URL + '/upload_doc', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        await axios.post(
+          import.meta.env.VITE_CONVERSE_URL + '/upload_doc',
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
           }
-        });
+        );
         setUploadSuccess(true);
       } catch (error) {
         console.error('Error uploading file:', error);
         setUploadSuccess(false);
       }
+    }
+    if (uploadSuccess) {
+      setTimeout(() => {
+        setIsFileUploadOpen(false);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        setIsFileUploadOpen(false);
+      }, 1000);
     }
   };
 
@@ -133,12 +156,12 @@ const ChatDocPage: React.FC = () => {
     setIsChooseMenuOpen(!isChooseMenuOpen);
   };
   const handleOptionClick = () => {
-    setIsChooseMenuOpen(false); 
+    setIsChooseMenuOpen(false);
   };
 
   return (
     <div className="flex h-screen">
-      <nav className="fixed start-0 top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
+      <nav className="fixed start-0 top-0 z-10 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
         <div className="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between px-4 lg:p-2">
           <Link
             to={'/landing'}
@@ -186,12 +209,24 @@ const ChatDocPage: React.FC = () => {
                 <UserName />
               </li>
               <li
+                className='group relative block cursor-pointer rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent md:p-0'
+                onClick={toggleInstructions}
+              >
+                View Instructions
+                {showInstructions && (
+                  <InstructionModal onClose={toggleInstructions} />
+                )}
+                <span className="absolute bottom-0 left-0 h-[1px] w-full scale-x-0 transform bg-blue-800 transition-transform duration-500 group-hover:scale-x-100"></span>
+              
+              </li>
+              <li
                 className="group relative block cursor-pointer rounded px-3 py-2 text-white transition duration-300 ease-in-out hover:text-blue-500 md:bg-transparent md:p-0 "
                 onClick={toggleFileUpload}
               >
                 Upload Document
                 <span className="absolute bottom-0 left-0 h-[1px] w-full scale-x-0 transform bg-blue-800 transition-transform duration-500 group-hover:scale-x-100"></span>
               </li>
+             
               <li>
                 <Link
                   to={'/landing'}
@@ -243,11 +278,11 @@ const ChatDocPage: React.FC = () => {
                 Upload File
               </Button>
               {uploadSuccess === true && (
-                <p className="text-green-500">File uploaded successfully!</p>
+                <p className="text-green-500">File uploaded successfully!</p>                
               )}
               {uploadSuccess === false && (
                 <p className="text-red-500">Failed to upload file!</p>
-              )}
+              )}              
             </div>
           </div>
         )}
@@ -306,8 +341,8 @@ const ChatDocPage: React.FC = () => {
                 key={index}
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
-                  ? 'text-white text-sm'
-                  : 'bg-gradient-to-r text-sm from-gray-700 to-gray-800 text-white'
+                    ? 'text-sm text-white'
+                    : 'bg-gradient-to-r from-gray-700 to-gray-800 text-sm text-white'
                 }`}
               >
                 {message.role === 'user' && <span className="mr-2">✨</span>}
@@ -368,11 +403,32 @@ const ChatDocPage: React.FC = () => {
       </div>
       {isSessionExpired && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center ">
-            <h2 className="text-sm font-bold mb-4">Session Expired</h2>
-            <p className="mb-4 text-xs">Your session has expired. Please log in again.</p>
-            <button onClick={handleSignInRedirect} className="bg-blue-500 text-white text-xs px-4 py-2 rounded-md">
+          <div className="rounded-lg bg-gray-800 p-6 text-center shadow-lg ">
+            <h2 className="mb-4 text-sm font-bold">Session Expired</h2>
+            <p className="mb-4 text-xs">
+              Your session has expired. Please log in again.
+            </p>
+            <button
+              onClick={handleSignInRedirect}
+              className="rounded-md bg-blue-500 px-4 py-2 text-xs text-white"
+            >
               Log In
+            </button>
+          </div>
+        </div>
+      )}
+      {noDocumentUpload && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="rounded-lg bg-gray-800 p-6 text-center shadow-lg ">
+            <h2 className="mb-4 text-sm font-bold">Upload not found</h2>
+            <p className="mb-4 text-xs">
+              Please upload a document before sending a message
+            </p>
+            <button
+              className="rounded-md bg-red-500 px-4 py-2 text-xs text-white"
+              onClick={() => setNoDocumentUpload(false)}
+            >
+              Close
             </button>
           </div>
         </div>

@@ -186,7 +186,6 @@ const ChatPage: React.FC = () => {
     setChatId(null);
 };
 
-
   return (
     <div className="flex h-screen">
       <nav className="fixed start-0 top-0 z-20 w-full border-b border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900">
