@@ -26,6 +26,7 @@ type UserFormValue = z.infer<typeof formSchema>;
  
 export default function UserAuthForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [userNotFound, setUserNotFound] = useState(false);
   const router = useRouter();
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
@@ -48,9 +49,12 @@ export default function UserAuthForm() {
       } else {
         console.error('Login error:', response.data.msg);
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error during login:', error);
-    }
+      if(error.response && error.response.status === 401){
+        setUserNotFound(true)
+      }
+    } 
   };
  
   return (
@@ -106,6 +110,9 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
+          {userNotFound && (
+            <div className="text-[#96FFD9] border border-2 border-gray-700 text-xs bg-gray-800 rounded-lg p-2">User not found. Please check your credentials</div>
+          )}
           <Button className="w-half p-2 mt-4" type="submit">
             Login
           </Button>

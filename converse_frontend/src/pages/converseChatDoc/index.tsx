@@ -13,6 +13,7 @@ const ChatDocPage: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
+  const [isSessionExpired, setIsSessionExpired] = useState(false);
 
   const { mutate: sendMessage, isLoading: isSendingMessage } = useMutation(
     (message: string) => {
@@ -42,9 +43,17 @@ const ChatDocPage: React.FC = () => {
       },
       onError: (error: any) => {
         console.error('Error sending message:', error);
+        if(error.response && error.response.status === 401){
+          setIsSessionExpired(true)
+        }
       }
     }
   );
+
+  const handleSignInRedirect = () => {
+    navigate('/signin');
+  };
+
 
   const handleSendMessage = () => {
     if (inputMessage.trim() !== '') {
@@ -297,8 +306,8 @@ const ChatDocPage: React.FC = () => {
                 key={index}
                 className={`message ${message.role} mb-2 rounded-md p-3 text-lg ${
                   message.role === 'user'
-                    ? 'text-white'
-                    : 'bg-gradient-to-r from-gray-700 to-gray-800 text-white'
+                  ? 'text-white text-sm'
+                  : 'bg-gradient-to-r text-sm from-gray-700 to-gray-800 text-white'
                 }`}
               >
                 {message.role === 'user' && <span className="mr-2">✨</span>}
@@ -357,6 +366,17 @@ const ChatDocPage: React.FC = () => {
           </div>
         </div>
       </div>
+      {isSessionExpired && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-center ">
+            <h2 className="text-sm font-bold mb-4">Session Expired</h2>
+            <p className="mb-4 text-xs">Your session has expired. Please log in again.</p>
+            <button onClick={handleSignInRedirect} className="bg-blue-500 text-white text-xs px-4 py-2 rounded-md">
+              Log In
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

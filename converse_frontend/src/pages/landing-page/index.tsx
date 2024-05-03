@@ -67,10 +67,23 @@ const LandingPage = () => {
             ref={secRef}
           >
             Ready to talk?
-            <Link to={"/signin"} className="group relative p-2 px-4 text-[#00D1FF] ">
-              Login now
-              <span className="absolute bottom-0 left-0 h-[2px] w-full scale-x-0 transform bg-[#00D1FF] transition-transform duration-500 group-hover:scale-x-100"></span>
-            </Link>
+            {localStorage.getItem('authToken') ? (
+              <Link
+                to={'/dashboard'}
+                className="group relative p-2 px-4 text-[#00D1FF] "
+              >
+                Click here to explore
+                <span className="absolute bottom-0 left-0 h-[2px] w-full scale-x-0 transform bg-[#00D1FF] transition-transform duration-500 group-hover:scale-x-100"></span>
+              </Link>
+            ) : (
+              <Link
+                to={'/signin'}
+                className="group relative p-2 px-4 text-[#00D1FF] "
+              >
+                Login now
+                <span className="absolute bottom-0 left-0 h-[2px] w-full scale-x-0 transform bg-[#00D1FF] transition-transform duration-500 group-hover:scale-x-100"></span>
+              </Link>
+            )}
           </p>
           <motion.div
             animate={{
